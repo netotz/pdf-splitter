@@ -20,14 +20,26 @@ parser.add_argument(
     required=True,
     type=int,
     nargs=2,
-    help='first and last page numbers to split from the input file'
+    help='range of first and last page numbers to split from the input file, according to file numbering (first page is page 1)'
 )
 
 args = parser.parse_args()
-print(args)
 if len(args.page_numbers) != len(args.split_name):
     raise argparse.ArgumentTypeError('specify the same number of page ranges as the number of splits.')
 
 inputfile = InputFile(args.filepath)
-splits = [SplitFile(f'{name}.pdf', pages) for name, pages in zip(args.split_name, args.page_numbers)]
+splits = [
+    SplitFile(f'{inputfile.id}-{name}.pdf', pages)
+    for name, pages in zip(
+        args.split_name,
+        # PDF objects number pages starting in 0
+        ((first - 1, last - 1) for first, last in args.page_numbers)
+    )
+]
+
+# info in console
+print(f'Splitting {inputfile.name} into {len(splits)} new files...', flush=True)
 split_pdf(inputfile, splits)
+print(f'{len(splits)} files created:', flush=True)
+for split in splits:
+    print(f' - {split.name}')

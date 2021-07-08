@@ -36,8 +36,6 @@ I'm using a Windows executable generated with [`PyInstaller`](https://github.com
 Arguments `-s` and `-p` can be repeated as many times as needed, but both have to be repeated the same number of times.
 So if a file needs to be split into 3 new files, 3 file names will need to be specified, each one with `-s`, and also 3 page ranges with `-p`, respectively.
 
-The page numbers start in 0.
-
 ### Examples
 
 Assume this is the folder, and you're using the executable:
@@ -51,7 +49,7 @@ folder/
 Following the previous example, running this inside `folder/`:
 
 ```txt
-pdf-splitter -s DEGREE-BACH -s IDCARD -p 0 1 -p 2 2 1234.pdf
+pdf-splitter -s DEGREE-BACH -s IDCARD -p 1 2 -p 3 3 1234.pdf
 ```
 
 Will result in:

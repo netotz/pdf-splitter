@@ -33,6 +33,12 @@ optional arguments:
 ### Usage
 
 I'm using a Windows executable generated with [`PyInstaller`](https://github.com/pyinstaller/pyinstaller), which is available in [Releases](https://github.com/netotz/pdf-splitter/releases), because the client PC containing the PDFs folder doesn't have Python installed.
+Also I include versions for both 64-bit and 32-bit CPUs, because my PC is 32-bit.
+If you want to generate the executables yourself, there's a bash script [`genexes.sh`](/genexes.sh) that runs `pyinstaller` with arguments I personally prefer:
+
+```txt
+$ bash genexes.sh
+```
 
 Arguments `-s` and `-p` can be repeated as many times as needed, but both have to be repeated the same number of times.
 So if a file needs to be split into 3 new files, 3 file names will need to be specified, each one with `-s`, and also 3 page ranges with `-p`, respectively.

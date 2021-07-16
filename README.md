@@ -32,18 +32,26 @@ optional arguments:
 
 ### Usage
 
+#### Executables
+
 I'm using a Windows executable generated with [`PyInstaller`](https://github.com/pyinstaller/pyinstaller), which is available in [Releases](https://github.com/netotz/pdf-splitter/releases), because the client PC containing the PDFs folder doesn't have Python installed.
-Also I include versions for both 64-bit and 32-bit CPUs, because my PC is 32-bit.
+There are versions for both 64-bit and 32-bit CPUs, because my PC is 32-bit.
 If you want to generate the executables yourself, there's a bash script [`genexes.sh`](/genexes.sh) that runs `pyinstaller` with arguments I personally prefer:
 
 ```txt
 $ bash genexes.sh
 ```
 
-Arguments `-s` and `-p` can be repeated as many times as needed, but both have to be repeated the same number of times.
+If you open the script you'll see that you'll need to create two [virtual environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment),
+one using a Python version for 64-bit, and the other one with a version for 32-bit, so you must have both versions installed.
+
+#### Arguments
+
+Arguments `-s` and `-p` are required can be repeated as many times as needed, but both have to be repeated the same number of times.
 So if a file needs to be split into 3 new files, 3 file names will need to be specified, each one with `-s`, and also 3 page ranges with `-p`, respectively.
 
-In my case, the original file it's not needed after being split, so I use argument `-d` to delete it.
+In my case, the original file it's not needed after being split, hence I use argument `-d` to delete it.
+It's optional, so the input file will remain there if not specified.
 
 ### Examples
 

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import os
 from typing import List, Tuple
 from pathlib import Path
 import re
@@ -24,7 +25,7 @@ class SplitFile:
         return range(first, last + 1)
 
 
-def split_pdf(inputfile: InputFile, splits: List[SplitFile]) -> None:
+def split_pdf(inputfile: InputFile, splits: List[SplitFile], delete_input: bool = False) -> None:
     original = PdfFileReader(inputfile.abspath)
     for split in splits:
         output = PdfFileWriter()
@@ -32,3 +33,5 @@ def split_pdf(inputfile: InputFile, splits: List[SplitFile]) -> None:
             output.addPage(original.getPage(page_number))
         with open(split.name, 'wb') as file:
             output.write(file)
+    if delete_input:
+        os.remove(inputfile.abspath)

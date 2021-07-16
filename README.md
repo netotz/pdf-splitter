@@ -15,8 +15,8 @@ As a result, I developed a simple CLI specifically for this problem.
 If you run [`main.py`](/pdf-splitter/main.py) using the `--help` argument you'll see the following:
 
 ```txt
-$ py pdf-splitter/main.py -h
-usage: main.py [-h] -s SPLIT_NAME -p PAGE_NUMBERS PAGE_NUMBERS filepath
+$ py main.py -h
+usage: main.py [-h] -s SPLIT_NAME -p PAGE_NUMBERS PAGE_NUMBERS [-d] filepath
 
 positional arguments:
   filepath              absolute path of the input PDF file to split, or just its name if it's in the same folder
@@ -26,7 +26,8 @@ optional arguments:
   -s SPLIT_NAME, --split-name SPLIT_NAME
                         name of a split file, it's not needed to include the extension (.pdf)
   -p PAGE_NUMBERS PAGE_NUMBERS, --page-numbers PAGE_NUMBERS PAGE_NUMBERS
-                        first and last page numbers to split from the input file
+                        range of first and last page numbers to split from the input file, according to file numbering (first page is page 1)
+  -d, --delete          deletes the input file only if specified
 ```
 
 ### Usage
@@ -35,6 +36,8 @@ I'm using a Windows executable generated with [`PyInstaller`](https://github.com
 
 Arguments `-s` and `-p` can be repeated as many times as needed, but both have to be repeated the same number of times.
 So if a file needs to be split into 3 new files, 3 file names will need to be specified, each one with `-s`, and also 3 page ranges with `-p`, respectively.
+
+In my case, the original file it's not needed after being split, so I use argument `-d` to delete it.
 
 ### Examples
 

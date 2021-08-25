@@ -5,17 +5,18 @@ A simple command line tool to split a PDF file according to the pages content.
 ## Motivation
 
 This project is the solution to automate a process that I was doing completely manually.
-There is a folder that contains ~250 PDF files. Each file contains one or many documents of a person, and they need to be split into different files each of which has a new name according to a format,
+There are 3 folders, each containing ~250 PDF files. Each file contains one or many documents of a person, and they need to be split into different files each of which has a new name according to a format,
 e.g. a file is named `1234.pdf` where `1234` is the ID of the person. This file contains the person's degree in the first 2 pages and the ID card in the 3rd page.
 So the degree will be extracted from pages 1 and 2 and named `1234-DEGREE-BACH.pdf`, assuming it's a bachelor's, and the ID card from page 3 with name `1234-IDCARD.pdf`.
 
 The original files don't follow a guideline, thus it's not possible to anticipate the order of the person's documents or if any of them is present at all, so I could only think about automatizing the process of splitting and naming the new files.
 As a result, I developed a simple CLI specifically for this problem.
 
-After the previous task was done, another one came up: to search for PDF files of some persons, specified by their IDs, and then splitting them following the same guideline of the last task.
-There's a web UI to search the person by her/his ID and select a couple of options to see the PDF.
-Lots of clicks.
+After the previous task was done, another one came up: to search for PDF files of some persons, specified by their IDs, and then splitting them following the same guideline as the previous goal.
+There's a web UI to search the person by typing her/his ID, scroll to a section of files, and select a couple of options to finally see the PDF... lots of clicks, and there were ~200 IDs.
+
 I have access to the directory that contains the files, so I decided to convert the original one-command tool into a subcommands tool (this README is updated to show it like that), adding a new subcommand to search inside the directory the files that I needed and copy them to a local folder.
+This directory has +60 000 folders and +600 000 files in total.
 
 ## Usage
 
@@ -86,7 +87,7 @@ $ bash genexes.sh
 ```
 
 If you open the script you'll see that you'll need to create two [virtual environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment),
-one using a Python version for 64-bit, and the other one with a version for 32-bit, so you must have both versions installed.
+one using a Python version for 64-bit, and the other one with a version for 32-bit, so you would need to have both versions installed.
 
 ### Examples
 
@@ -103,7 +104,7 @@ folder/
 Following the previous example, running this inside `folder/`:
 
 ```txt
-pdf-splitter -s DEGREE-BACH -s IDCARD -p 1 2 -p 3 3 1234.pdf
+pdf-splitter split -s DEGREE-BACH -s IDCARD -p 1 2 -p 3 3 1234.pdf
 ```
 
 Will result in:
@@ -118,4 +119,48 @@ folder/
 
 #### Copying PDFs
 
+Suppose we have the following file `list.txt`:
 
+```txt
+100100
+150000
+202202
+...
+```
+
+Given the following directory, we want to copy the files that end in `15`:
+
+```txt
+Archivos/
+├─ 100a199/
+│  ├─ 0100100/
+│  │  ├─ 0100100-8.pdf
+│  │  ├─ 0100100-15.pdf   <---
+│  ├─ 0150000/
+│  │  ├─ 0150000-15.pdf   <---
+│  │  ├─ ...
+│  ├─ ...
+├─ 200a299/
+│  ├─ 0202202/
+│  │  ├─ 0202202-2.pdf
+│  │  ├─ 0202202-15.pdf   <---
+│  │  ├─ ...
+│  ├─ ...
+├─ ...
+├─ pdf-splitter.exe
+├─ list.txt
+```
+
+_Archivos_ means _Files_, each subfolder is a range of the first three digits of a six digits number, _a_ means _to_ (yeah the structure is horrible lol I didn't make it).
+
+```txt
+pdf-splitter copy list.txt D:\Copiados -t 15
+```
+
+```txt
+Copiados/
+├─ 0100100-15.pdf
+├─ 0150000-15.pdf
+├─ 0202202-15.pdf
+├─ ...
+```

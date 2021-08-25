@@ -3,18 +3,26 @@ import argparse
 from editor import InputFile, SplitFile, split_pdf
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
+subparsers = parser.add_subparsers(
+    title='subcommands'
+)
+
+split_subcommand = subparsers.add_parser(
+    'split',
+    help='splits a PDF'    
+)
+split_subcommand.add_argument(
     'filepath',
     type=str,
     help="absolute path of the input PDF file to split, or just its name if it's in the same folder"
 )
-parser.add_argument(
+split_subcommand.add_argument(
     '-s', '--split-name',
     action='append',
     required=True,
     help="name of a split file, it's not needed to include the extension (.pdf)"
 )
-parser.add_argument(
+split_subcommand.add_argument(
     '-p', '--page-numbers',
     action='append',
     required=True,
@@ -22,7 +30,7 @@ parser.add_argument(
     nargs=2,
     help='range of first and last page numbers to split from the input file, according to file numbering (first page is page 1)'
 )
-parser.add_argument(
+split_subcommand.add_argument(
     '-d', '--delete',
     action='store_true',
     help='deletes the input file only if specified'

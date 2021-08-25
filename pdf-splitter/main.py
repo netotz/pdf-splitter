@@ -1,6 +1,7 @@
 import argparse
 
-from editor import InputFile, SplitFile, split_pdf
+import actions
+
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(
@@ -35,24 +36,27 @@ split_subcommand.add_argument(
     action='store_true',
     help='deletes the input file only if specified'
 )
+split_subcommand.set_defaults(
+    func=actions.split
+)
+
+move_subcommand = subparsers.add_parser(
+    'move',
+    help='moves files that match the ID of a list file to another directory'
+)
+move_subcommand.add_argument(
+    'list',
+    type=str,
+    help='name of the file that contains the IDs to look for, each one in a new line'
+)
+move_subcommand.add_argument(
+    'destination',
+    type=str,
+    help='name of the folder to move the found files to'
+)
+move_subcommand.set_defaults(
+    func=actions.move
+)
 
 args = parser.parse_args()
-if len(args.page_numbers) != len(args.split_name):
-    raise argparse.ArgumentTypeError('specify the same number of page ranges as the number of splits.')
-
-inputfile = InputFile(args.filepath)
-splits = [
-    SplitFile(f'{inputfile.id}-{name}.pdf', pages)
-    for name, pages in zip(
-        args.split_name,
-        # PDF objects number pages starting in 0
-        ((first - 1, last - 1) for first, last in args.page_numbers)
-    )
-]
-
-# info in console
-print(f'Splitting {inputfile.name} into {len(splits)} new files...', flush=True)
-split_pdf(inputfile, splits, args.delete)
-print(f'{len(splits)} files created:', flush=True)
-for split in splits:
-    print(f' - {split.name}')
+args.func(args)

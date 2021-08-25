@@ -40,22 +40,27 @@ split_subcommand.set_defaults(
     func=actions.split
 )
 
-move_subcommand = subparsers.add_parser(
-    'move',
-    help='moves files that match the ID of a list file to another directory'
+copy_subcommand = subparsers.add_parser(
+    'copy',
+    help='copies files that match the ID of a list file to another directory'
 )
-move_subcommand.add_argument(
+copy_subcommand.add_argument(
     'list',
     type=str,
     help='name of the file that contains the IDs to look for, each one in a new line'
 )
-move_subcommand.add_argument(
+copy_subcommand.add_argument(
     'destination',
     type=str,
-    help='name of the folder to move the found files to'
+    help='absolute path of the directory to copy the found files to'
 )
-move_subcommand.set_defaults(
-    func=actions.move
+copy_subcommand.add_argument(
+    '-t', '--type',
+    type=int,
+    help='type of file to look for'
+)
+copy_subcommand.set_defaults(
+    func=actions.copy
 )
 
 args = parser.parse_args()

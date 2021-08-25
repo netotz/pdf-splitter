@@ -12,11 +12,33 @@ So the degree will be extracted from pages 1 and 2 and named `1234-DEGREE-BACH.p
 The original files don't follow a guideline, thus it's not possible to anticipate the order of the person's documents or if any of them is present at all, so I could only think about automatizing the process of splitting and naming the new files.
 As a result, I developed a simple CLI specifically for this problem.
 
+After the previous task was done, another one came up: to search for PDF files of some persons, specified by their IDs, and then splitting them following the same guideline of the last task.
+There's a web UI to search the person by her/his ID and select a couple of options to see the PDF.
+Lots of clicks.
+I have access to the directory that contains the files, so I decided to convert the original one-command tool into a subcommands tool (this README is updated to show it like that), adding a new subcommand to search inside the directory the files that I needed and copy them to a local folder.
+
+## Usage
+
 If you run [`main.py`](/pdf-splitter/main.py) using the `--help` argument you'll see the following:
 
 ```txt
 $ py main.py -h
-usage: main.py [-h] -s SPLIT_NAME -p PAGE_NUMBERS PAGE_NUMBERS [-d] filepath
+usage: main.py [-h] {split,copy} ...
+
+optional arguments:
+  -h, --help    show this help message and exit
+
+subcommands:
+  {split,copy}
+    split       splits a PDF
+    copy        copies files that match the ID of a list file to another directory
+```
+
+### `split` subcommand
+
+```txt
+$ py main.py split -h
+usage: main.py split [-h] -s SPLIT_NAME -p PAGE_NUMBERS PAGE_NUMBERS [-d] filepath
 
 positional arguments:
   filepath              absolute path of the input PDF file to split, or just its name if it's in the same folder
@@ -30,7 +52,28 @@ optional arguments:
   -d, --delete          deletes the input file only if specified
 ```
 
-## Usage
+#### Arguments
+
+Arguments `-s` and `-p` are required can be repeated as many times as needed, but both have to be repeated the same number of times.
+So if a file needs to be split into 3 new files, 3 file names will need to be specified, each one with `-s`, and also 3 page ranges with `-p`, respectively.
+
+In my case, the original file it's not needed after being split, hence I use argument `-d` to delete it.
+It's optional, so the input file will remain there if not specified.
+
+### `copy` subcommand
+
+```txt
+$ py main.py copy -h
+usage: main.py copy [-h] [-t TYPE] list destination
+
+positional arguments:
+  list                  name of the file that contains the IDs to look for, each one in a new line
+  destination           absolute path of the directory to copy the found files to
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TYPE, --type TYPE  type of file to look for
+```
 
 ### Executables
 
@@ -45,15 +88,9 @@ $ bash genexes.sh
 If you open the script you'll see that you'll need to create two [virtual environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment),
 one using a Python version for 64-bit, and the other one with a version for 32-bit, so you must have both versions installed.
 
-### Arguments
-
-Arguments `-s` and `-p` are required can be repeated as many times as needed, but both have to be repeated the same number of times.
-So if a file needs to be split into 3 new files, 3 file names will need to be specified, each one with `-s`, and also 3 page ranges with `-p`, respectively.
-
-In my case, the original file it's not needed after being split, hence I use argument `-d` to delete it.
-It's optional, so the input file will remain there if not specified.
-
 ### Examples
+
+#### Splitting a PDF
 
 Assume this is the folder, and you're using the executable:
 
@@ -78,3 +115,7 @@ folder/
 ├─ 1234-DEGREE-BACH.pdf - 2 pages
 ├─ 1234-IDCARD.pdf      - 1 page
 ```
+
+#### Copying PDFs
+
+

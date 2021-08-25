@@ -29,7 +29,7 @@ def split(args):
 
 def copy(args):
     with open(args.list, 'r') as listfile:
-        ids_str = listfile.readlines()
+        ids_str = listfile.read().splitlines()
 
     if not os.path.exists(args.destination):
         os.mkdir(args.destination)
